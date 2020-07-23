@@ -148,14 +148,14 @@ void Red_Black_Tree::Transplant(TreeNode * u, TreeNode * v)
     }
     else if(u == u->parent->left)
     {// u是左节点
-        u->parent->left = v; //
+        u->parent->left = v; //和 u = v 有啥区别？
     }
     else
     {
-        u->parent->right = v;	//
+        u->parent->right = v;	//和 u = v 有啥区别？
     }
 
-    v->parent = u->parent; // 
+    v->parent = u->parent;
 }
 /**
  * Find a node whose key value equals to "_key"

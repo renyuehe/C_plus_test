@@ -39,26 +39,57 @@ private:
 
 typedef void (*Fun)();
 
-typedef long long u32;//¸ù¾İ²»Í¬µÄ±àÒëÆ÷À´¾ö¶¨µ½µ×Ê¹ÓÃ (32Î»)4×Ö½Ú (64Î»)8¸ö×Ö½Ú£¬À´È·¶¨µ½µ×Ê¹ÓÃ int £¬ long £¬ »¹ÊÇ long long 
+typedef int u32;
+//typedef long u32;
+typedef long long u64;//¸ù¾İ²»Í¬µÄ±àÒëÆ÷À´¾ö¶¨µ½µ×Ê¹ÓÃ (32Î»)4×Ö½Ú (64Î»)8¸ö×Ö½Ú£¬À´È·¶¨µ½µ×Ê¹ÓÃ int £¬ long £¬ »¹ÊÇ long long 
 
+
+//È·ÈÏÄ¿±ê£ºº¯ÊıÖ¸Õë È¡ Ğéº¯Êı  typedef void (*Fun)();
+//±àÒëÆ÷¾ö¶¨ÁË Ö¸ÕëµÄÎ»Êı , Òª×öµ½ÕıÈ·µÄ×ª»»  ÏÈ²âÊÔ sizeof(void *)<<endl £¬ÔÚÑ¡Ôñ sizeof(long long) £¬¶¨Òå typedef long long u64;
+//¶ÔÏóÖ¸Õë Ö¸ÏòÒ»¸öÖ¸ÕëÊı×é£¬Õâ¸öÖ¸ÕëÊı×éµÄµÚÒ»¸öÔªËØ´æ·ÅµÄÊÇĞéº¯Êı±íµÄÊ×µØÖ·  : u64 address = ((u64*)p)[0]; ÖÁÓÚµÚ¶ş¸öÔªËØ£¬µÚÈı¸ö£¬»¹ĞèÒªÑĞ¾¿ 
+//Ğéº¯Êı±íµÄµØÖ· ÓÖ¶ÔÓ¦Ò»¸ö Ö¸ÕëÊı×é£¬Õâ¸öÖ¸ÕëÊı×éµÄÔªËØÒÀ´Î¶ÔÓ¦ ¶ÔÓ¦µÄĞéº¯Êı  £ºFun fun= (Fun)(  ((u64*)address)[0] );
+//	Fun fun= (Fun)(  ((u64*)address)[0] );
+//    fun = (Fun)(  ((u64*)address)[1]  ) ;
+//    fun = (Fun)(  ((u64*)address)[2]  );
 int main()
 {
+	cout <<"±àÒëÆ÷ÊÇ sizeof(void *)Î»µÄ£º"<<sizeof(void *)<<endl; 
+    cout <<"int:"<< sizeof(int) << endl;
+    cout <<"long:"<< sizeof(long) << endl;
+    cout <<"long long:"<< sizeof(long long) << endl;
+    cout <<"choose:"<< sizeof(u64) << endl;
+    cout <<endl;
+	
     Base *p = new Derive;
-    
-    cout << sizeof(u32) <<endl;
-    
-    u32 address = *(u32*)p;//pÊÇ¶ÔÏóµÄÖ¸Õë  
-    cout<< address << endl;//å¾—åˆ°è¿™ä¸ªå¯¹è±¡çš„åœ°å€ 
+#if 1
+    u64 address = *(u64*)p;//pÊÇ¶ÔÏóµÄÖ¸Õë £¬  (u32*)p ÊÇÒ»¸öÖ¸ÕëÊı×é £¬ *(u32 *)p ÊÇÖ¸ÕëÊı×éµÄÊ×Ö¸Õë µÈ¼ÛÓë ((u32 *)p)[0]   
+#else if
+	u64 address = ((u64*)p)[0];	//µÈ¼ÛÓë u32 address = *(u32*)p;
+#endif
+//	u32 address = ((u32 *)p)[1];	//ÅÜÔ¶ÁË£¡
+ 
+    cout << "Ğéº¯Êı±íµÄÊ×µØÖ·£º" << address << endl;// address Ğéº¯Êı±íµÄÊ×µØÖ· 
 
-    Fun fun= (Fun)(*(u32*)address);
+#if 0 
+	//address Ğéº¯Êı±íµÄÊ×µØÖ·£¬ÔÙ½øÒ»²½È¡ * ¾ÍÄÜÈ¡³öĞéº¯ÊıÁË 
+	
+    Fun fun= (Fun)(*(u64*)address);
     fun();
     
+    fun = (Fun)(*(((u64*)address)+1));
+    fun();
+    fun = (Fun)(*((u64*)address+2));
+    fun();
+#else if
+	//address Ğéº¯Êı±íµÄÊ×µØÖ·£¬ÔÙ½øÒ»²½È¡ * ¾ÍÄÜÈ¡³öĞéº¯ÊıÁË 
+	Fun fun= (Fun)(  ((u64*)address)[0] );
+    fun();
     
-    //ä¸ºä»€ä¹ˆè¿™ä¸‰ä¸ªä»£ç ä¼šå°±å¡æ­»äº†  æ‰§è¡Œä¸äº†å‘¢ï¼Ÿ 
-    fun = (Fun)(*(((u32*)address)+1));
+    fun = (Fun)(  ((u64*)address)[1]  ) ;
     fun();
-    fun = (Fun)(*((u32*)address+2));
-    fun();
+    fun = (Fun)(  ((u64*)address)[2]  );
+    fun();	
+#endif
     
     return 0;
 }

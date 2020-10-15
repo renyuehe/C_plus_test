@@ -8,15 +8,15 @@
 struct student {
     std::string name;
     int age;
-
+	
+	//构造函数 
     student(std::string n, int a) : name(n), age(a) {}
 
-    //重载输出操作符
-    friend std::ostream &operator<<(std::ostream &os, const student &stu) {
+    //重载输出操作符  <<
+    friend std::ostream &operator<<(std::ostream &os, const student &stu){
         os << stu.name << " " << stu.age;
         return os;
     }
-    
 };
 
 int main() {
